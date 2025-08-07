@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tra cứu phong thủy bất động sản</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .score-stars i {
+            color: gold;
+        }
+        table.summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table.summary-table td {
+            border: 1px solid #c49b66;
+            padding: 6px 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-dragon"></i> Tra cứu phong thủy bất động sản</h1>
+        <form id="fengshuiForm">
+            <div class="form-group">
+                <label for="birthdate">Ngày sinh:</label>
+                <input type="date" id="birthdate" required>
+            </div>
+            <div class="form-group">
+                <label for="birthhour">Giờ sinh:</label>
+                <input type="number" id="birthhour" min="0" max="23" required>
+            </div>
+            <div class="form-group">
+                <label for="gender">Giới tính:</label>
+                <select id="gender">
+                    <option value="nam">Nam</option>
+                    <option value="nu">Nữ</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="yearBuild">Năm xây nhà:</label>
+                <input type="number" id="yearBuild" required>
+            </div>
+            <div class="form-group">
+                <label for="houseDirection">Hướng nhà:</label>
+                <select id="houseDirection">
+                    <option value="">--Chọn--</option>
+                    <option value="Bắc">Bắc</option>
+                    <option value="Đông">Đông</option>
+                    <option value="Nam">Nam</option>
+                    <option value="Tây">Tây</option>
+                    <option value="Đông Bắc">Đông Bắc</option>
+                    <option value="Đông Nam">Đông Nam</option>
+                    <option value="Tây Bắc">Tây Bắc</option>
+                    <option value="Tây Nam">Tây Nam</option>
+                </select>
+            </div>
+            <fieldset>
+                <legend>Thế đất & Môi trường</legend>
+                <div class="form-group">
+                    <input type="checkbox" id="slope">
+                    <label for="slope">Đất dốc</label>
+                    <select id="slopeDir">
+                        <option value="">--Hướng dốc--</option>
+                        <option value="Bắc">Bắc</option>
+                        <option value="Đông">Đông</option>
+                        <option value="Nam">Nam</option>
+                        <option value="Tây">Tây</option>
+                        <option value="Đông Bắc">Đông Bắc</option>
+                        <option value="Đông Nam">Đông Nam</option>
+                        <option value="Tây Bắc">Tây Bắc</option>
+                        <option value="Tây Nam">Tây Nam</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" id="road">
+                    <label for="road">Đường đâm thẳng vào cửa</label>
+                    <select id="roadDir">
+                        <option value="">--Hướng đường--</option>
+                        <option value="Bắc">Bắc</option>
+                        <option value="Đông">Đông</option>
+                        <option value="Nam">Nam</option>
+                        <option value="Tây">Tây</option>
+                        <option value="Đông Bắc">Đông Bắc</option>
+                        <option value="Đông Nam">Đông Nam</option>
+                        <option value="Tây Bắc">Tây Bắc</option>
+                        <option value="Tây Nam">Tây Nam</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="waterDistance">Khoảng cách mặt nước (m):</label>
+                    <input type="number" id="waterDistance" min="0">
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" id="hospital">
+                    <label for="hospital">Bệnh viện trước mặt</label>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" id="temple">
+                    <label for="temple">Chùa/miếu</label>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" id="church">
+                    <label for="church">Nhà thờ</label>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" id="cemetery">
+                    <label for="cemetery">Nghĩa địa</label>
+                </div>
+            </fieldset>
+            <div class="form-group">
+                <button type="button" onclick="calculate()">
+                    <i class="fas fa-search"></i> Xem phong thủy
+                </button>
+            </div>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        const originalCalculate = calculate;
+        function calculate() {
+            originalCalculate();
+            const resultDiv = document.getElementById('result');
+            const html = resultDiv.innerHTML;
+            let score = 100;
+            if (html.includes('Phạm Kim Lâu') || html.includes('Phạm Hoàng Ốc') || html.includes('Phạm Tam Tai')) score -= 30;
+            if (html.includes('<ul>')) score -= 30;
+            if (score < 0) score = 0;
+            let stars = Math.round(score / 20);
+            let starIcons = '<div class="score-stars">';
+            for (let i = 0; i < 5; i++) {
+                starIcons += i < stars ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>';
+            }
+            starIcons += '</div>';
+            const canChi = html.match(/Can Chi.*?:.*? (.*?)<\/p>/)?.[1] || '-';
+            const menh = html.match(/Mệnh ngũ hành.*?:.*? (.*?)<\/p>/)?.[1] || '-';
+            const cung = html.match(/Cung mệnh.*?:.*? (.*?)<\/p>/)?.[1] || '-';
+            const tuoi = html.match(/Tuổi xây nhà \((\d+)/)?.[1] || '-';
+            const table = `
+            <table class="summary-table">
+                <tr><td><strong>Can Chi</strong></td><td>${canChi}</td></tr>
+                <tr><td><strong>Ngũ hành</strong></td><td>${menh}</td></tr>
+                <tr><td><strong>Cung mệnh</strong></td><td>${cung}</td></tr>
+                <tr><td><strong>Tuổi xây nhà</strong></td><td>${tuoi}</td></tr>
+                <tr><td><strong>Điểm tổng quát</strong></td><td>${score}/100</td></tr>
+            </table>`;
+            resultDiv.innerHTML = `${starIcons}${table}` + resultDiv.innerHTML;
+        }
+    </script>
+</body>
+</html>
